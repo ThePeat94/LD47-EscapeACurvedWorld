@@ -108,5 +108,29 @@ namespace Player
 
             this.m_animator.SetBool("IsGrounded", true);
         }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            var hazard = other.gameObject.GetComponent<Hazard>();
+            if (hazard != null)
+            {
+                this.HandleDie();
+            }
+        }
+
+        private void HandleDie()
+        {
+            
+        }
+
+        private IEnumerator Die()
+        {
+            yield return null;
+        }
+
+        private void Respawn()
+        {
+            
+        }
     }
 }
