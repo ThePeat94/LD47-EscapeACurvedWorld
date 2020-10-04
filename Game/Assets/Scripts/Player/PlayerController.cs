@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using Data;
+using Scripts;
 using EventArgs;
 using Platforms;
 using States;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 namespace Player
@@ -15,6 +16,7 @@ namespace Player
         [SerializeField] private PlayerData m_playerData;
         [SerializeField] private Animator m_animator;
         [SerializeField] private GameObject m_feet;
+        [SerializeField] private GameObject m_barrel;
 
         private Transform m_camera;
         private InputProcessor m_inputProcessor;
@@ -26,6 +28,7 @@ namespace Player
         private bool m_isGrounded;
         private bool m_isJumping;
         private bool m_isDead;
+        private ItemData m_currentItem;
 
         private static PlayerController s_instance;
 
@@ -63,6 +66,8 @@ namespace Player
                 s_instance = this;
             else
                 Destroy(s_instance.gameObject);
+
+            SceneManager.sceneLoaded += (arg0, mode) => this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
             
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
@@ -75,6 +80,11 @@ namespace Player
         {
             if (!this.m_inputProcessor.enabled)
                 return;
+
+            if (this.m_currentItem != null && this.m_inputProcessor.UseItemTriggered)
+            {
+                this.UseItem();
+            }
             
             var isGrounded = this.IsGrounded();
             this.m_animator.SetBool("IsGrounded", this.IsGrounded());
@@ -85,6 +95,13 @@ namespace Player
 
             if (this.m_inputProcessor.JumpTriggered && isGrounded)
                 StartCoroutine(this.HandleJump());
+        }
+
+        private void UseItem()
+        {
+            var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, Quaternion.identity);
+            bullet.GetComponent<Bullet>().Dir = this.m_barrel.transform.forward;
+            this.m_currentItem = null;
         }
 
         private void HandleMovement(float delta)
@@ -133,7 +150,7 @@ namespace Player
         private bool IsGrounded()
         {
             var boxSize = new Vector3(1f, 0.2f, 1f);
-            return Physics.OverlapBox(this.m_feet.transform.position, boxSize, Quaternion.identity, 1 << LayerMask.NameToLayer("Ground")).Length > 0; // true; // Physics.BoxCast(this.m_feet.transform.position, new Vector3(1f, 1f, 1f) , Vector3.down, Vector3.down, 1 << LayerMask.NameToLayer("Default"));
+            return Physics.OverlapBox(this.m_feet.transform.position, boxSize, Quaternion.identity, 1 << LayerMask.NameToLayer("Ground")).Length > 0;
         }
 
         private void OnDrawGizmos()
@@ -169,10 +186,27 @@ namespace Player
                 this.StartCoroutine(this.HandleDie(hazard.gameObject));
             }
         }
-        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponent<Goal>() != null)
+            {
+                StartCoroutine(this.HandleReachedGoal());
+                return;
+            }
+
+            var item = other.GetComponent<Item>();
+            if (item != null)
+            {
+                this.m_currentItem = item.Data;
+                Destroy(item.gameObject);
+                return;
+            }
+        }
+
         private IEnumerator HandleDie(GameObject killer)
         {
             this.m_isDead = true;
+            this.m_currentItem = null;
             this.m_died?.Invoke(this, new PlayerDiedEventArgs(killer));
             this.m_moveDirection = Vector3.zero;
             this.m_animator.Play("Die");
@@ -194,14 +228,6 @@ namespace Player
         private void RespawnPlayer()
         {
             this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.GetComponent<Goal>() != null)
-            {
-                StartCoroutine(this.HandleReachedGoal());
-            }
         }
 
         private IEnumerator HandleReachedGoal()
