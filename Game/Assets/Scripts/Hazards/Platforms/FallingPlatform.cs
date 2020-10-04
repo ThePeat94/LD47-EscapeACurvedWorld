@@ -15,6 +15,8 @@ namespace Platforms
         private Vector3 m_startingPos;
         private WaitForSeconds m_waitForFalling;
 
+        private Transform m_oldPlayerParent;
+
         private bool m_fallDown;
 
         private void Awake()
@@ -40,6 +42,7 @@ namespace Platforms
             var player = other.gameObject.GetComponent<PlayerController>();
             if (player != null)
             {
+                this.m_oldPlayerParent = player.transform.parent;
                 player.transform.SetParent(this.transform);
                 StartCoroutine(this.Fall());
             }
@@ -50,7 +53,8 @@ namespace Platforms
             var player = other.gameObject.GetComponent<PlayerController>();
             if (player != null)
             {
-                player.transform.SetParent(null);
+                player.transform.SetParent(this.m_oldPlayerParent);
+                DontDestroyOnLoad(player.gameObject);
             }
         }
 

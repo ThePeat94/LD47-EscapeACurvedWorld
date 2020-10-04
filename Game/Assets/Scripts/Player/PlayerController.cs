@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Data;
 using Scripts;
 using EventArgs;
@@ -31,6 +32,8 @@ namespace Player
         private bool m_isDead;
         private ItemData m_currentItem;
 
+        private int m_currentSceneIndex;
+        
         private static PlayerController s_instance;
 
         public static PlayerController Instance => s_instance ?? FindObjectOfType<PlayerController>();
@@ -68,15 +71,30 @@ namespace Player
             else
                 Destroy(s_instance.gameObject);
 
-            SceneManager.sceneLoaded += (arg0, mode) => this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
-
+            SceneManager.sceneLoaded += LevelWasLoaded;
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
             this.m_camera = Camera.main.transform;
             this.m_animator = this.GetComponent<Animator>();
             this.m_inputProcessor.RunningStateChanged += (sender, args) => this.m_isRunning = args.NewState;
+            this.m_inputProcessor.enabled = false;
         }
-        
+
+        private void LevelWasLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
+            this.m_currentSceneIndex = arg0.buildIndex;
+            StartCoroutine(this.PlayRespawnAndIdle());
+        }
+
+        private IEnumerator PlayRespawnAndIdle()
+        {
+            this.m_animator.Play("Respawn");
+            yield return new WaitForSeconds(8.5f);
+            this.m_animator.Play("Idle");
+            this.m_inputProcessor.enabled = true;
+        }
+
         void Update()
         {
             if (!this.m_inputProcessor.enabled)
@@ -101,8 +119,10 @@ namespace Player
         private void UseItem()
         {
             var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, this.m_barrel.transform.rotation);
-            bullet.GetComponent<Bullet>().Dir = this.m_barrel.transform.forward;
+            var targetDir = this.m_barrel.transform.forward - this.transform.position;
+            bullet.GetComponent<Bullet>().Dir = targetDir.normalized;
             this.m_currentItem = null;
+            AudioSource.PlayClipAtPoint(this.m_playerData.ShootingSound, this.m_camera.position, 0.25f);
         }
 
         private void HandleMovement(float delta)
@@ -162,6 +182,7 @@ namespace Player
 
         private IEnumerator HandleJump()
         {
+            AudioSource.PlayClipAtPoint(this.m_playerData.JumpSound, this.m_camera.position, 0.25f);
             this.m_animator.SetTrigger("StartJump");
             this.m_rigidbody.AddForce(Vector3.up * this.m_playerData.JumpForce, ForceMode.Impulse);
             while (!this.IsGrounded())
@@ -194,6 +215,7 @@ namespace Player
             var item = other.GetComponent<Item>();
             if (item != null)
             {
+                AudioSource.PlayClipAtPoint(this.m_playerData.PowerUpSound, this.m_camera.position, 0.25f);
                 this.m_currentItem = item.Data;
                 Destroy(item.gameObject);
                 return;
@@ -253,17 +275,22 @@ namespace Player
 
         private IEnumerator HandleReachedGoal()
         {
+            AudioSource.PlayClipAtPoint(this.m_playerData.VictorySound, this.m_camera.position, 0.25f);
             this.m_inputProcessor.enabled = false;
             this.m_rigidbody.velocity = Vector3.zero;
             this.m_reachedGoal?.Invoke(this, System.EventArgs.Empty);
             this.m_animator.Play("Cheer");
             this.RotateTowards(Vector3.forward, 100, 1);
             yield return new WaitForSeconds(8.217f);
-            this.RespawnPlayer();
-            this.m_animator.Play("Respawn");
-            yield return new WaitForSeconds(8.5f);
-            this.m_animator.Play("Idle");
-            this.m_inputProcessor.enabled = true;
+
+            if (this.m_currentSceneIndex < SceneManager.sceneCount)
+            {
+                SceneManager.LoadScene(this.m_currentSceneIndex + 1);
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
         }
         
         

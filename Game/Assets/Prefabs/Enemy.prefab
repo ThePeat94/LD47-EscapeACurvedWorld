@@ -320,6 +320,7 @@ GameObject:
   - component: {fileID: 1659737644878137416}
   - component: {fileID: 1659737644878137415}
   - component: {fileID: 1659737644878137417}
+  - component: {fileID: 7815903852062102988}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -361,67 +362,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_WarningMessage: '
-
-    Transform ''hand.L'' has been deleted
-
-    Transform ''forearm.L''
-    has been deleted
-
-    Transform ''upper_arm.L'' has been deleted
-
-    Transform
-    ''shoulder.L'' has been deleted
-
-    Transform ''hand.R'' has been deleted
-
-    Transform
-    ''forearm.R'' has been deleted
-
-    Transform ''upper_arm.R'' has been deleted
-
-    Transform
-    ''shoulder.R'' has been deleted
-
-    Transform ''spine.006'' has been deleted
-
-    Transform
-    ''spine.005'' has been deleted
-
-    Transform ''spine.004'' has been deleted
-
-    Transform
-    ''spine.003'' has been deleted
-
-    Transform ''spine.002'' has been deleted
-
-    Transform
-    ''spine.001'' has been deleted
-
-    Transform ''toe.L'' has been deleted
-
-    Transform
-    ''foot.L'' has been deleted
-
-    Transform ''shin.L'' has been deleted
-
-    Transform
-    ''thigh.L'' has been deleted
-
-    Transform ''toe.R'' has been deleted
-
-    Transform
-    ''foot.R'' has been deleted
-
-    Transform ''shin.R'' has been deleted
-
-    Transform
-    ''thigh.R'' has been deleted
-
-    Transform ''spine'' has been deleted
-
-    Transform
-    ''character'' has been deleted'
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
@@ -468,6 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enemyData: {fileID: 11400000, guid: bbbebb71e8fc61a4ba427babd4b5950b, type: 2}
+  m_audioSource: {fileID: 7815903852062102988}
 --- !u!195 &1659737644878137417
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -490,6 +432,138 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!82 &7815903852062102988
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366523159501464477}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.25
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 50
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0071297
+      inSlope: 0.03528102
+      outSlope: 0.03528102
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.44589844
+      value: 1.0007324
+      inSlope: -0.003304582
+      outSlope: -0.003304582
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.7231766
+      value: 0.60324097
+      inSlope: -5.0019917
+      outSlope: -5.0019917
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.7627899
+      value: 0.34967804
+      inSlope: -1.2504979
+      outSlope: -1.2504979
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.85555726
+      value: 0.06607056
+      inSlope: -0.07815612
+      outSlope: -0.07815612
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.053570557
+      inSlope: -0.05001994
+      outSlope: -0.05001994
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.15555556
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2416247720731198029
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +677,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2048830346878817264, guid: 4f0da19b528c4654398d299949a82084, type: 3}
+  - {fileID: 2100000, guid: 030981da16fe5f9479b5cf1a1111a7bd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1075,11 +1149,11 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2193485799063065854, guid: 4f0da19b528c4654398d299949a82084, type: 3}
-  - {fileID: -7771323690311922985, guid: 4f0da19b528c4654398d299949a82084, type: 3}
-  - {fileID: -2316586686640757316, guid: 4f0da19b528c4654398d299949a82084, type: 3}
+  - {fileID: 2100000, guid: 7cb95ecf17aa7b9458f4f88840b09a07, type: 2}
+  - {fileID: 2100000, guid: 9fe4774912bb213458ea9fd7b189fd5b, type: 2}
+  - {fileID: 2100000, guid: 995ddb8dd869c904db7e1194e748b934, type: 2}
   - {fileID: 2100000, guid: fc5f8002939b68b42a1ff1c95be8a6c5, type: 2}
-  - {fileID: -2048830346878817264, guid: 4f0da19b528c4654398d299949a82084, type: 3}
+  - {fileID: 2100000, guid: c2f0ca43c4428644cb9c2d4fa008d606, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1659,7 +1733,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2048830346878817264, guid: 4f0da19b528c4654398d299949a82084, type: 3}
+  - {fileID: 2100000, guid: 030981da16fe5f9479b5cf1a1111a7bd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
