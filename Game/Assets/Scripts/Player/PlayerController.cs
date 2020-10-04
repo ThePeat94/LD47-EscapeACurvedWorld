@@ -101,7 +101,7 @@ namespace Player
         private void UseItem()
         {
             var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, this.m_barrel.transform.rotation);
-            bullet.GetComponent<Bullet>().Dir = this.m_barrel.transform.forward;
+            bullet.GetComponent<Bullet>().Dir = -this.m_barrel.transform.forward;
             this.m_currentItem = null;
         }
 
