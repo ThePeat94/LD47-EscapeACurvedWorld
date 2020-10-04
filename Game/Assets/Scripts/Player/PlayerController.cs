@@ -3,6 +3,7 @@ using System.Collections;
 using Data;
 using Scripts;
 using EventArgs;
+using Hazards;
 using Platforms;
 using States;
 using UnityEngine;
@@ -68,7 +69,7 @@ namespace Player
                 Destroy(s_instance.gameObject);
 
             SceneManager.sceneLoaded += (arg0, mode) => this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
-            
+
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
             this.m_camera = Camera.main.transform;
@@ -99,7 +100,7 @@ namespace Player
 
         private void UseItem()
         {
-            var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, Quaternion.identity);
+            var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, this.m_barrel.transform.rotation);
             bullet.GetComponent<Bullet>().Dir = this.m_barrel.transform.forward;
             this.m_currentItem = null;
         }
@@ -176,14 +177,10 @@ namespace Player
         {
             var hazard = other.gameObject.GetComponent<Hazard>();
             var hazardType = hazard?.GetType();
-            if (hazard != null && hazardType != typeof(MovingPlatform) && hazardType != typeof(FallingPlatform))
+            var isKillingHazard = hazard != null && hazardType != typeof(MovingPlatform) && hazardType != typeof(FallingPlatform); 
+            if (isKillingHazard)
             {
-                this.m_inputProcessor.enabled = false;
-                this.m_isRunning = false;
-                this.m_animator.SetBool("IsWalking", false);
-                this.m_animator.SetBool("IsIdle", false);
-                this.m_animator.SetBool("IsRunning", false);
-                this.StartCoroutine(this.HandleDie(hazard.gameObject));
+                this.PlayerDie(hazard.gameObject);
             }
         }
         private void OnTriggerEnter(Collider other)
@@ -201,6 +198,30 @@ namespace Player
                 Destroy(item.gameObject);
                 return;
             }
+        }
+
+        private void OnParticleCollision(GameObject other)
+        {
+            Debug.Log("Particle collision");
+            var elementarGun = other.GetComponentInParent<ElementarGun>();
+            if (elementarGun != null)
+            {
+                this.PlayerDie(elementarGun.gameObject);
+                return;
+            }
+        }
+
+        private void PlayerDie(GameObject killer)
+        {
+            if (this.m_isDead)
+                return;
+            
+            this.m_inputProcessor.enabled = false;
+            this.m_isRunning = false;
+            this.m_animator.SetBool("IsWalking", false);
+            this.m_animator.SetBool("IsIdle", false);
+            this.m_animator.SetBool("IsRunning", false);
+            this.StartCoroutine(this.HandleDie(killer));
         }
 
         private IEnumerator HandleDie(GameObject killer)
@@ -244,5 +265,7 @@ namespace Player
             this.m_animator.Play("Idle");
             this.m_inputProcessor.enabled = true;
         }
+        
+        
     }
 }
