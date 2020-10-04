@@ -14,6 +14,7 @@ namespace Player
         public float MovementZ => this.m_movementInput.y;
         public float MoveAmount => Mathf.Abs(this.MovementX) + Mathf.Abs(this.MovementZ);
         public bool JumpTriggered => this.m_playerInput.Keyboard.Jump.triggered;
+        public bool UseItemTriggered => this.m_playerInput.Mouse.UseItem.triggered;
 
         public event EventHandler<SprintChangedEventArgs> RunningStateChanged
         {

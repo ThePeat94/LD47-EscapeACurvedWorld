@@ -6,14 +6,12 @@ using UnityEngine;
 public class CameraFollower : MonoBehaviour
 {
     [SerializeField] private Transform m_player;
-
-    // TODO: Calculate
+    
     private float m_initialZDistance;
 
-    private void Start()
+    private void Awake()
     {
         this.m_initialZDistance = this.transform.position.z - this.m_player.position.z;
-        Debug.Log(this.m_initialZDistance);
     }
 
     // Update is called once per frame
