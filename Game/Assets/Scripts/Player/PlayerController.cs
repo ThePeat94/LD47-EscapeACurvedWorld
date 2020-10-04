@@ -103,6 +103,7 @@ namespace Player
             var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, this.m_barrel.transform.rotation);
             bullet.GetComponent<Bullet>().Dir = -this.m_barrel.transform.forward;
             this.m_currentItem = null;
+            AudioSource.PlayClipAtPoint(this.m_playerData.ShootingSound, this.m_camera.position);
         }
 
         private void HandleMovement(float delta)
@@ -162,6 +163,7 @@ namespace Player
 
         private IEnumerator HandleJump()
         {
+            AudioSource.PlayClipAtPoint(this.m_playerData.JumpSound, this.m_camera.position, 0.5f);
             this.m_animator.SetTrigger("StartJump");
             this.m_rigidbody.AddForce(Vector3.up * this.m_playerData.JumpForce, ForceMode.Impulse);
             while (!this.IsGrounded())
@@ -194,6 +196,7 @@ namespace Player
             var item = other.GetComponent<Item>();
             if (item != null)
             {
+                AudioSource.PlayClipAtPoint(this.m_playerData.PowerUpSound, this.m_camera.position);
                 this.m_currentItem = item.Data;
                 Destroy(item.gameObject);
                 return;
@@ -253,6 +256,7 @@ namespace Player
 
         private IEnumerator HandleReachedGoal()
         {
+            AudioSource.PlayClipAtPoint(this.m_playerData.VictorySound, this.m_camera.position, 1f);
             this.m_inputProcessor.enabled = false;
             this.m_rigidbody.velocity = Vector3.zero;
             this.m_reachedGoal?.Invoke(this, System.EventArgs.Empty);

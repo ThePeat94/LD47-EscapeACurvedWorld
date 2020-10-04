@@ -12,6 +12,7 @@ public class CameraFollower : MonoBehaviour
     private void Awake()
     {
         this.m_initialZDistance = this.transform.position.z - this.m_player.position.z;
+        DontDestroyOnLoad(this.gameObject);
     }
 
     // Update is called once per frame

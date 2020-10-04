@@ -8,6 +8,7 @@ namespace Hazards
     public class Enemy : Hazard
     {
         [SerializeField] private EnemyData m_enemyData;
+        [SerializeField] private AudioSource m_audioSource;
         private Animator m_animator;
     
         private bool m_isDead;
@@ -19,12 +20,15 @@ namespace Hazards
 
         private NavMeshAgent m_navMeshAgent;
 
+        private Rigidbody m_rigidbody;
+
         private void Awake()
         {
             this.m_animator = this.GetComponent<Animator>();
             this.m_navMeshAgent = this.GetComponent<NavMeshAgent>();
             this.m_collider = this.GetComponent<Collider>();
             this.m_navMeshAgent.speed = this.m_enemyData.MovementSpeed;
+            this.m_rigidbody = this.GetComponent<Rigidbody>();
         }
 
         private void Start()
@@ -32,15 +36,21 @@ namespace Hazards
             PlayerController.Instance.Died += (sender, args) =>
             {
                 if (args.Killer == this.gameObject)
+                {
+                    this.TryPlayAudioClip(this.m_enemyData.ZombieVictory,false);
                     this.m_animator.Play("Cheering");
+                }
                 
+                this.m_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                 this.m_target = null;
                 this.m_navMeshAgent.isStopped = true;
             };
 
             this.m_startingPos = this.transform.position;
             this.m_startingRot = this.transform.rotation;
-            
+            this.m_audioSource.clip = this.m_enemyData.ZombieIdle;
+            this.m_audioSource.Play();
+
         }
 
         public void Update()
@@ -52,6 +62,7 @@ namespace Hazards
         
             if (this.m_target == null)
             {
+                this.TryPlayAudioClip(this.m_enemyData.ZombieIdle, true);
                 this.m_animator.SetFloat("Velocity", 0f);
                 var colliders = Physics.OverlapSphere(this.transform.position, this.m_enemyData.ChasingDistance, 1 << LayerMask.NameToLayer("Player"));
 
@@ -63,6 +74,7 @@ namespace Hazards
             }
             else
             {
+                this.TryPlayAudioClip(this.m_enemyData.ZombieChase, true);
                 this.m_navMeshAgent.SetDestination(this.m_target.position);
                 this.m_animator.SetFloat("Velocity", 1f);
                 if (this.m_navMeshAgent.remainingDistance > this.m_enemyData.ChasingDistance)
@@ -89,6 +101,7 @@ namespace Hazards
             this.m_animator.SetFloat("Velocity", 0f);
             this.m_animator.Play("Idle");
             this.m_collider.enabled = true;
+            this.m_rigidbody.constraints = RigidbodyConstraints.None;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -96,12 +109,31 @@ namespace Hazards
             var bullet = other.GetComponent<Bullet>();
             if (bullet != null)
             {
-                this.m_isDead = true;
-                this.m_animator.Play("Die");
-                this.m_navMeshAgent.isStopped = true;
-                this.m_collider.enabled = false;
+                this.HandleDeath();
                 Destroy(bullet.gameObject);
             }
         }
+
+        private void HandleDeath()
+        {
+            this.m_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            this.TryPlayAudioClip(this.m_enemyData.ZombieDie, false);
+            this.m_isDead = true;
+            this.m_animator.Play("Die");
+            this.m_navMeshAgent.isStopped = true;
+            this.m_collider.enabled = false;
+        }
+
+
+        private void TryPlayAudioClip(AudioClip clipToPlay, bool loop)
+        {
+            if (this.m_audioSource.clip != clipToPlay)
+            {
+                this.m_audioSource.loop = loop;
+                this.m_audioSource.clip = clipToPlay;
+                this.m_audioSource.Play();
+            }
+        }
+
     }
 }

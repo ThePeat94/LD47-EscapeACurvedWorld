@@ -14,6 +14,7 @@ public class MovingPlatform : Hazard
     private WaitForSeconds m_waitForDelay;
     
     private Transform m_currentTarget;
+    private Transform m_oldPlayerParent;
 
     private void Start()
     {
@@ -55,6 +56,7 @@ public class MovingPlatform : Hazard
         var player = other.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
+            this.m_oldPlayerParent = player.transform.parent;
             player.transform.SetParent(this.transform);
         }
     }
@@ -64,7 +66,8 @@ public class MovingPlatform : Hazard
         var player = other.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
-            player.transform.SetParent(null);
+            player.transform.SetParent(this.m_oldPlayerParent);
+            DontDestroyOnLoad(player.gameObject);
         }
     }
 
