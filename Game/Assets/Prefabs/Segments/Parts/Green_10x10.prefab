@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1228996502894870354}
   - component: {fileID: 1091032269143564242}
   - component: {fileID: 1984193184324644220}
-  - component: {fileID: 1432538756463693577}
-  m_Layer: 0
+  - component: {fileID: 8013924161337705945}
+  m_Layer: 8
   m_Name: Green_10x10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3769,8 +3769,8 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!64 &1432538756463693577
-MeshCollider:
+--- !u!65 &8013924161337705945
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3779,7 +3779,6 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  serializedVersion: 2
+  m_Size: {x: 10, y: 0, z: 10}
+  m_Center: {x: 5, y: 0, z: 5}
