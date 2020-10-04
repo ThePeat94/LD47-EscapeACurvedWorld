@@ -4489,7 +4489,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh228216
+  m_Name: pb_Mesh-297392
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9989,6 +9989,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3453790190106941614, guid: 9426b7e44d4c4b1469249658adbc82cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9426b7e44d4c4b1469249658adbc82cf, type: 3}
 --- !u!4 &1160129103 stripped
@@ -12265,7 +12269,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh228480
+  m_Name: pb_Mesh-297398
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -15133,7 +15137,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh229446
+  m_Name: pb_Mesh-297400
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
