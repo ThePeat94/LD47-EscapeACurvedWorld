@@ -41,7 +41,7 @@ namespace Scripts
         {
             yield return new WaitForSeconds(this.m_gameOverSound.length);
             this.m_audioSource.clip = this.m_gameLoopTrack;
-            this.m_audioSource.volume = 0.33f;
+            this.m_audioSource.volume = 0.1f;
             this.m_audioSource.Play();
         }
     }

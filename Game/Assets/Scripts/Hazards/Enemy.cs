@@ -1,4 +1,6 @@
-﻿using Data;
+﻿using System;
+using Data;
+using EventArgs;
 using Player;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,8 +35,17 @@ namespace Hazards
 
         private void Start()
         {
-            PlayerController.Instance.Died += (sender, args) =>
-            {
+            PlayerController.Instance.Died += PlayerDied;
+
+            this.m_startingPos = this.transform.position;
+            this.m_startingRot = this.transform.rotation;
+            this.m_audioSource.clip = this.m_enemyData.ZombieIdle;
+            this.m_audioSource.Play();
+
+        }
+
+        private void PlayerDied(object sender, PlayerDiedEventArgs args)
+        {
                 if (args.Killer == this.gameObject)
                 {
                     this.TryPlayAudioClip(this.m_enemyData.ZombieVictory,false);
@@ -44,13 +55,7 @@ namespace Hazards
                 this.m_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                 this.m_target = null;
                 this.m_navMeshAgent.isStopped = true;
-            };
-
-            this.m_startingPos = this.transform.position;
-            this.m_startingRot = this.transform.rotation;
-            this.m_audioSource.clip = this.m_enemyData.ZombieIdle;
-            this.m_audioSource.Play();
-
+                
         }
 
         public void Update()
@@ -135,5 +140,9 @@ namespace Hazards
             }
         }
 
+        private void OnDestroy()
+        {
+            PlayerController.Instance.Died -= this.PlayerDied;
+        }
     }
 }
