@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using Data;
+using EventArgs;
+using Platforms;
 using States;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,9 +15,7 @@ namespace Player
         [SerializeField] private PlayerData m_playerData;
         [SerializeField] private Animator m_animator;
         [SerializeField] private GameObject m_feet;
-        
-        private IState m_currentState;
-        
+
         private Transform m_camera;
         private InputProcessor m_inputProcessor;
         private Vector3 m_moveDirection;
@@ -25,9 +25,45 @@ namespace Player
         private bool m_isRunning;
         private bool m_isGrounded;
         private bool m_isJumping;
+        private bool m_isDead;
+
+        private static PlayerController s_instance;
+
+        public static PlayerController Instance => s_instance ?? FindObjectOfType<PlayerController>();
+
+        public bool IsDead => this.m_isDead;
+        
+        public event EventHandler<PlayerDiedEventArgs> Died
+        {
+            add => this.m_died += value;
+            remove => this.m_died -= value;
+        }
+        
+        public event EventHandler Respawned
+        {
+            add => this.m_respawned += value;
+            remove => this.m_respawned -= value;
+        }
+        
+        public event EventHandler ReachedGoal
+        {
+            add => this.m_reachedGoal += value;
+            remove => this.m_reachedGoal -= value;
+        }
+
+
+        private EventHandler<PlayerDiedEventArgs> m_died;
+        private EventHandler m_respawned;
+        private EventHandler m_reachedGoal;
 
         void Awake()
         {
+            DontDestroyOnLoad(this.gameObject);
+            if (s_instance == null)
+                s_instance = this;
+            else
+                Destroy(s_instance.gameObject);
+            
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
             this.m_camera = Camera.main.transform;
@@ -37,6 +73,9 @@ namespace Player
         
         void Update()
         {
+            if (!this.m_inputProcessor.enabled)
+                return;
+            
             var isGrounded = this.IsGrounded();
             this.m_animator.SetBool("IsGrounded", this.IsGrounded());
             var delta = Time.deltaTime;
@@ -59,9 +98,11 @@ namespace Player
             projectedVelocity.y = this.m_rigidbody.velocity.y;
             this.m_rigidbody.velocity = projectedVelocity;
 
+            var isMoving = Math.Abs(this.m_moveDirection.x) > 0f || Math.Abs(this.m_moveDirection.z) > 0f;
+            
             this.m_animator.SetBool("IsIdle", this.m_moveDirection == Vector3.zero);
-            this.m_animator.SetBool("IsWalking", this.m_moveDirection != Vector3.zero && !this.m_isRunning);
-            this.m_animator.SetBool("IsRunning", this.m_moveDirection != Vector3.zero && this.m_isRunning);
+            this.m_animator.SetBool("IsWalking", isMoving && !this.m_isRunning);
+            this.m_animator.SetBool("IsRunning", isMoving && this.m_isRunning);
         }
 
         private void HandleRotation(float delta)
@@ -80,8 +121,13 @@ namespace Player
             if (targetDir == Vector3.zero)
                 targetDir = this.transform.forward;
 
-            var lookRotation = Quaternion.LookRotation(targetDir.normalized);
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, this.m_playerData.RotationSpeed * delta);
+            this.RotateTowards(targetDir, this.m_playerData.RotationSpeed, delta);
+        }
+
+        private void RotateTowards(Vector3 dir, float rotationSpeed, float delta)
+        {
+            var lookRotation = Quaternion.LookRotation(dir.normalized);
+            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, rotationSpeed * delta);
         }
 
         private bool IsGrounded()
@@ -112,25 +158,65 @@ namespace Player
         private void OnCollisionEnter(Collision other)
         {
             var hazard = other.gameObject.GetComponent<Hazard>();
-            if (hazard != null)
+            var hazardType = hazard?.GetType();
+            if (hazard != null && hazardType != typeof(MovingPlatform) && hazardType != typeof(FallingPlatform))
             {
-                this.HandleDie();
+                this.m_inputProcessor.enabled = false;
+                this.m_isRunning = false;
+                this.m_animator.SetBool("IsWalking", false);
+                this.m_animator.SetBool("IsIdle", false);
+                this.m_animator.SetBool("IsRunning", false);
+                this.StartCoroutine(this.HandleDie(hazard.gameObject));
+            }
+        }
+        
+        private IEnumerator HandleDie(GameObject killer)
+        {
+            this.m_isDead = true;
+            this.m_died?.Invoke(this, new PlayerDiedEventArgs(killer));
+            this.m_moveDirection = Vector3.zero;
+            this.m_animator.Play("Die");
+            yield return new WaitForSeconds(4.34f);
+            StartCoroutine(this.HandleRespawn());
+        }
+
+        private IEnumerator HandleRespawn()
+        {
+            this.RespawnPlayer();
+            this.m_respawned?.Invoke(this, System.EventArgs.Empty);
+            this.m_animator.SetTrigger("Respawn");
+            yield return new WaitForSeconds(8.5f);
+            this.m_animator.Play("Idle");
+            this.m_inputProcessor.enabled = true;
+            this.m_isDead = false;
+        }
+
+        private void RespawnPlayer()
+        {
+            this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponent<Goal>() != null)
+            {
+                StartCoroutine(this.HandleReachedGoal());
             }
         }
 
-        private void HandleDie()
+        private IEnumerator HandleReachedGoal()
         {
-            
-        }
-
-        private IEnumerator Die()
-        {
-            yield return null;
-        }
-
-        private void Respawn()
-        {
-            
+            this.m_inputProcessor.enabled = false;
+            this.m_rigidbody.velocity = Vector3.zero;
+            this.m_reachedGoal?.Invoke(this, System.EventArgs.Empty);
+            this.m_animator.Play("Cheer");
+            this.RotateTowards(Vector3.forward, 100, 1);
+            yield return new WaitForSeconds(8.217f);
+            this.RespawnPlayer();
+            this.m_animator.Play("Respawn");
+            yield return new WaitForSeconds(8.5f);
+            this.m_animator.Play("Idle");
+            this.m_inputProcessor.enabled = true;
         }
     }
 }

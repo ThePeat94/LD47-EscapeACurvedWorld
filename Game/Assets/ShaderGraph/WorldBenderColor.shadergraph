@@ -4,7 +4,7 @@
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"d411592e-23b4-4be8-8ced-a36a362c3198\"\n    },\n    \"m_Name\": \"Amount\",\n    \"m_DefaultReferenceName\": \"Vector1_E0BD1CB9\",\n    \"m_OverrideReferenceName\": \"\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.014999999664723874,\n    \"m_FloatType\": 1,\n    \"m_RangeValues\": {\n        \"x\": 0.004999999888241291,\n        \"y\": 0.10000000149011612\n    }\n}"
+            "JSONnodeData": "{\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"d411592e-23b4-4be8-8ced-a36a362c3198\"\n    },\n    \"m_Name\": \"Amount\",\n    \"m_DefaultReferenceName\": \"Vector1_E0BD1CB9\",\n    \"m_OverrideReferenceName\": \"\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Precision\": 0,\n    \"m_GPUInstanced\": false,\n    \"m_Hidden\": false,\n    \"m_Value\": 0.004999999888241291,\n    \"m_FloatType\": 1,\n    \"m_RangeValues\": {\n        \"x\": 0.004999999888241291,\n        \"y\": 0.10000000149011612\n    }\n}"
         },
         {
             "typeInfo": {

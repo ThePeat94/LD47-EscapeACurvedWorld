@@ -2,7 +2,7 @@
 
 namespace Data
 {
-    [CreateAssetMenu(fileName = "Player Data", menuName = "Data", order = 0)]
+    [CreateAssetMenu(menuName = "Data/Player Data")]
     public class PlayerData : ScriptableObject
     {
         public float JumpForce => this.m_jumpForce;

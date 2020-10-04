@@ -4,4 +4,8 @@ using UnityEngine;
 
 public class Hazard : MonoBehaviour
 {
+    public virtual void ResetHazard()
+    {
+        
+    }
 }
