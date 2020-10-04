@@ -16493,6 +16493,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2906475006389776788, guid: 3528df3ab84c64944a1e3aedfbb0a39b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2923742996049221056, guid: 3528df3ab84c64944a1e3aedfbb0a39b, type: 3}
       propertyPath: m_Name
       value: Fence_Row

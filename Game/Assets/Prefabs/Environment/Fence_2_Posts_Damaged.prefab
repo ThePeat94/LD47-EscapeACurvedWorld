@@ -216,6 +216,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fence (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 03add8e3193bfdc4fa7c70e0d7c5a012, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03add8e3193bfdc4fa7c70e0d7c5a012, type: 3}
 --- !u!4 &4176465500411964087 stripped
