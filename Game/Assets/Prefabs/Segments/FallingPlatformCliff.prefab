@@ -154,7 +154,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6632081494223468845}
-  m_LocalRotation: {x: -0, y: 0.000000014901161, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -90}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -795,6 +795,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6632081494223468844}
     m_Modifications:
+    - target: {fileID: 1214498743386108828, guid: 51fcb1ab3e203294891ec97b84998a60, type: 3}
+      propertyPath: m_fallingPlatformData
+      value: 
+      objectReference: {fileID: 11400000, guid: 3221f62cb306d8c48819b40ad0a8e969, type: 2}
     - target: {fileID: 2101223231021949768, guid: 51fcb1ab3e203294891ec97b84998a60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -851,7 +855,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Falling Platform
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8177980717720952450, guid: 51fcb1ab3e203294891ec97b84998a60, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 51fcb1ab3e203294891ec97b84998a60, type: 3}
 --- !u!4 &9158501170661505892 stripped
 Transform:
