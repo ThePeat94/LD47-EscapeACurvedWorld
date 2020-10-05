@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_delayBetweenFire: 2
   m_fireDuration: 5
-  m_particleSystem: {fileID: 1450075494647936969, guid: 8020064630417634cbbabba16a5725e0, type: 3}
+  m_particleSystem: {fileID: 1450075494647936969, guid: a9885cf87102ddf4c961cc3c1404dde5, type: 3}
   m_bullet: {fileID: 0}
