@@ -386,6 +386,10 @@ PrefabInstance:
       propertyPath: m_SelectedEditorRenderState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 963008982549902810, guid: 35ceaf0ed4063ca4cb6559cce44f1132, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4cd9039282b56074e8628d512e430efd, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35ceaf0ed4063ca4cb6559cce44f1132, type: 3}
 --- !u!4 &503059785156525934 stripped
@@ -456,6 +460,10 @@ PrefabInstance:
       propertyPath: m_SelectedEditorRenderState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 963008982549902810, guid: 35ceaf0ed4063ca4cb6559cce44f1132, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4cd9039282b56074e8628d512e430efd, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35ceaf0ed4063ca4cb6559cce44f1132, type: 3}
 --- !u!4 &1818684466757303745 stripped
@@ -518,10 +526,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7815903852062102988, guid: b0ea7a5b2e2c50441937469daafa09a7, type: 3}
-      propertyPath: MaxDistance
-      value: 30
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0ea7a5b2e2c50441937469daafa09a7, type: 3}
 --- !u!4 &8383262193282254531 stripped
@@ -540,6 +544,10 @@ PrefabInstance:
       propertyPath: m_SelectedEditorRenderState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6198539602866321952, guid: 922d6ac6da467b542ad0bdc119550474, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ab70001895faba14d97e608ac932fa7b, type: 2}
     - target: {fileID: 6198539602866321955, guid: 922d6ac6da467b542ad0bdc119550474, type: 3}
       propertyPath: m_Mesh
       value: 

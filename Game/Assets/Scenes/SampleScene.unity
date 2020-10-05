@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.13296545, g: 0.19145328, b: 0.33962262, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 73324b55f67f54c7bbf43204788b8bbe, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 56113b3b655ab7349bab4d7d405c258a, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.114102125, g: 0.32948005, b: 0.71094096, a: 1}
+  m_IndirectSpecularColor: {r: 0.23108153, g: 0.60405886, b: 0.9881506, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4704,7 +4704,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-79802
+  m_Name: pb_Mesh-596126
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5281,6 +5281,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 13.623
       objectReference: {fileID: 0}
+    - target: {fileID: -3153280164109904279, guid: 5048f22819770c542babc0666f33435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a84aedddcc7ddf4db07b927031a0f57, type: 2}
     - target: {fileID: 919132149155446097, guid: 5048f22819770c542babc0666f33435e, type: 3}
       propertyPath: m_Name
       value: enemy
@@ -5289,6 +5293,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a3808f63722f69b4e8d5d1a15c908f42, type: 2}
+    - target: {fileID: 3832433506795615104, guid: 5048f22819770c542babc0666f33435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a84aedddcc7ddf4db07b927031a0f57, type: 2}
     - target: {fileID: 4670573133155220723, guid: 5048f22819770c542babc0666f33435e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -9783,7 +9791,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-79800
+  m_Name: pb_Mesh-596124
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -11605,7 +11613,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-78228
+  m_Name: pb_Mesh-592534
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -12261,7 +12269,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-79804
+  m_Name: pb_Mesh-596128
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -20935,6 +20943,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 225946709}
     m_Modifications:
+    - target: {fileID: 503059785156525921, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 515f5b60309324948846b4a77cc59c6c, type: 2}
     - target: {fileID: 503059785156525922, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -20943,10 +20955,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 884628624}
+    - target: {fileID: 1818684466757303758, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 515f5b60309324948846b4a77cc59c6c, type: 2}
     - target: {fileID: 3003331178200150921, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1073619704}
+    - target: {fileID: 3003331178200150922, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 172ef0d260e40ad41b1e2d255199ea8e, type: 2}
     - target: {fileID: 9189058760044532490, guid: 4ecd073f86105e1468e4dd21e2a70cad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -21004,6 +21024,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 225946709}
     m_Modifications:
+    - target: {fileID: 746276099519480283, guid: 5ea14c0087ec3a340a3c3869295f99f3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e55557d4df6e862438931061a15c316d, type: 2}
+    - target: {fileID: 1108513327250826117, guid: 5ea14c0087ec3a340a3c3869295f99f3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e55557d4df6e862438931061a15c316d, type: 2}
     - target: {fileID: 4319930343034000342, guid: 5ea14c0087ec3a340a3c3869295f99f3, type: 3}
       propertyPath: m_Name
       value: ElementarGunSegment

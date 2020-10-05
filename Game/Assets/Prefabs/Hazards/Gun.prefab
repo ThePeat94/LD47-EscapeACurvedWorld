@@ -148,14 +148,22 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 34afc8ac852e09d4c8efd3c251baae6a, type: 2}
+    - target: {fileID: -3855335175272487014, guid: d6efc84bfa37cfb4b80e776776a1dfeb, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 405281db27a261345843c28c37272571, type: 2}
     - target: {fileID: 919132149155446097, guid: d6efc84bfa37cfb4b80e776776a1dfeb, type: 3}
       propertyPath: m_Name
       value: elementarGun
       objectReference: {fileID: 0}
+    - target: {fileID: 1797760339730403953, guid: d6efc84bfa37cfb4b80e776776a1dfeb, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 405281db27a261345843c28c37272571, type: 2}
     - target: {fileID: 3724435939843820470, guid: d6efc84bfa37cfb4b80e776776a1dfeb, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 34afc8ac852e09d4c8efd3c251baae6a, type: 2}
+      objectReference: {fileID: 2100000, guid: db983b834068b3c43b59120143806bef, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6efc84bfa37cfb4b80e776776a1dfeb, type: 3}
 --- !u!4 &7059582725165792223 stripped

@@ -288,7 +288,7 @@ namespace Player
             this.RotateTowards(Vector3.forward, 100, 1);
             yield return new WaitForSeconds(8.217f);
 
-            if (this.m_currentSceneIndex < SceneManager.sceneCountInBuildSettings)
+            if (this.m_currentSceneIndex < SceneManager.sceneCountInBuildSettings - 1)
             {
                 SceneManager.LoadScene(this.m_currentSceneIndex + 1);
             }
