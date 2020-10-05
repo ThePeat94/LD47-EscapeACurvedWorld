@@ -17,11 +17,15 @@ namespace Scripts
         private void Awake()
         {
             if (s_instance == null)
+            {
+                DontDestroyOnLoad(this.gameObject);
                 s_instance = this;
+            }
             else
+            {
                 Destroy(this.gameObject);
-            
-            DontDestroyOnLoad(this.gameObject);
+                return;
+            }
         }
 
         private void Start()

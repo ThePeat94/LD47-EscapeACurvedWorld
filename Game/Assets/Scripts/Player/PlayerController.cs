@@ -65,12 +65,17 @@ namespace Player
 
         void Awake()
         {
-            DontDestroyOnLoad(this.gameObject);
             if (s_instance == null)
+            {
+                DontDestroyOnLoad(this.gameObject);
                 s_instance = this;
+            }
             else
-                Destroy(s_instance.gameObject);
-
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+            
             SceneManager.sceneLoaded += LevelWasLoaded;
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
@@ -283,7 +288,7 @@ namespace Player
             this.RotateTowards(Vector3.forward, 100, 1);
             yield return new WaitForSeconds(8.217f);
 
-            if (this.m_currentSceneIndex < SceneManager.sceneCount)
+            if (this.m_currentSceneIndex < SceneManager.sceneCountInBuildSettings)
             {
                 SceneManager.LoadScene(this.m_currentSceneIndex + 1);
             }

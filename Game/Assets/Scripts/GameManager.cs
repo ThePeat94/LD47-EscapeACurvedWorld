@@ -21,12 +21,17 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        SceneManager.sceneLoaded +=OnsceneLoaded;
-        DontDestroyOnLoad(this.gameObject);
         if (s_instance == null)
+        {
+            DontDestroyOnLoad(this.gameObject);
             s_instance = this;
+        }
         else
+        {
             Destroy(this.gameObject);
+            return;
+        }
+        SceneManager.sceneLoaded +=OnsceneLoaded;
     }
 
     private void OnsceneLoaded(Scene arg0, LoadSceneMode arg1)

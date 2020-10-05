@@ -13,14 +13,19 @@ public class CameraFollower : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
         if (s_instance == null)
+        {
+            DontDestroyOnLoad(this.gameObject);
             s_instance = this;
+        }
         else
-            Destroy(s_instance.gameObject);
-        
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
         this.m_initialZDistance = this.transform.position.z - this.m_player.position.z;
-        DontDestroyOnLoad(this.gameObject);
+
     }
 
     // Update is called once per frame
