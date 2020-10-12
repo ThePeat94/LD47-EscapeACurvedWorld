@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
 using Data;
 using Scripts;
 using EventArgs;
 using Hazards;
 using Platforms;
-using States;
+using States.PlayerStates;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 
 namespace Player
 {
@@ -25,21 +22,20 @@ namespace Player
         private Vector3 m_moveDirection;
         private Vector3 m_targetPosition;
         private Rigidbody m_rigidbody;
-
-        private bool m_isRunning;
-        private bool m_isGrounded;
-        private bool m_isJumping;
-        private bool m_isDead;
         private ItemData m_currentItem;
-
         private int m_currentSceneIndex;
+        private PlayerState m_currentPlayerState;
         
         private static PlayerController s_instance;
-
         public static PlayerController Instance => s_instance ?? FindObjectOfType<PlayerController>();
 
-        public bool IsDead => this.m_isDead;
-        
+        public Animator Animator => this.m_animator;
+        public InputProcessor InputProcessor => this.m_inputProcessor;
+        public Transform PlayerCamera => this.m_camera;
+        public PlayerData PlayerData => this.m_playerData;
+        public Rigidbody Rigidbody => this.m_rigidbody;
+        public GameObject Feet => this.m_feet;
+
         public event EventHandler<PlayerDiedEventArgs> Died
         {
             add => this.m_died += value;
@@ -63,6 +59,7 @@ namespace Player
         private EventHandler m_respawned;
         private EventHandler m_reachedGoal;
 
+        #region  Unity Event Functions
         void Awake()
         {
             if (s_instance == null)
@@ -75,130 +72,71 @@ namespace Player
                 Destroy(this.gameObject);
                 return;
             }
-            
-            SceneManager.sceneLoaded += LevelWasLoaded;
+
+            SceneManager.sceneLoaded += (arg0, mode) =>
+            {
+                this.ChangeState(new RespawnState(this));
+                this.m_inputProcessor.enabled = true;
+            };
             this.m_rigidbody = this.GetComponent<Rigidbody>();
             this.m_inputProcessor = this.GetComponent<InputProcessor>();
             this.m_camera = Camera.main.transform;
             this.m_animator = this.GetComponent<Animator>();
-            this.m_inputProcessor.RunningStateChanged += (sender, args) => this.m_isRunning = args.NewState;
-            this.m_inputProcessor.enabled = false;
+            this.m_currentPlayerState = new RespawnState(this);
         }
 
-        private void LevelWasLoaded(Scene arg0, LoadSceneMode arg1)
+        private void Start()
         {
-            this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
-            this.m_currentSceneIndex = arg0.buildIndex;
-            StartCoroutine(this.PlayRespawnAndIdle());
-        }
-
-        private IEnumerator PlayRespawnAndIdle()
-        {
-            this.m_animator.Play("Respawn");
-            yield return new WaitForSeconds(8.5f);
-            this.m_animator.Play("Idle");
-            this.m_inputProcessor.enabled = true;
         }
 
         void Update()
         {
             if (!this.m_inputProcessor.enabled)
                 return;
-
-            if (this.m_currentItem != null && this.m_inputProcessor.UseItemTriggered)
-            {
-                this.UseItem();
-            }
             
-            var isGrounded = this.IsGrounded();
-            this.m_animator.SetBool("IsGrounded", this.IsGrounded());
-            var delta = Time.deltaTime;
-            if(isGrounded) 
-                this.HandleMovement(delta);
-            this.HandleRotation(delta);
+            this.m_currentPlayerState.Tick(Time.deltaTime);
+        }
+        
+        #endregion
 
-            if (this.m_inputProcessor.JumpTriggered && isGrounded)
-                StartCoroutine(this.HandleJump());
+        public void ChangeState(PlayerState newPlayerState)
+        {
+            this.m_currentPlayerState?.OnStateExit();
+
+            this.m_currentPlayerState = newPlayerState;
+            
+            this.m_currentPlayerState.OnStateEnter();
+            this.HandleStateChange();
         }
 
-        private void UseItem()
+        private void HandleStateChange()
         {
+            var stateType = this.m_currentPlayerState.GetType();
+            if (stateType == typeof(RespawnState))
+            {
+                this.m_respawned?.Invoke(this, System.EventArgs.Empty);
+                this.m_currentItem = null;
+            }
+        }
+        
+        public void UseItem()
+        {
+            if (this.m_currentItem == null)
+                return;
+            
             var bullet = Instantiate(this.m_currentItem.Bullet, this.m_barrel.transform.position, this.m_barrel.transform.rotation);
             var targetDir = this.m_barrel.transform.forward - this.transform.position;
             bullet.GetComponent<Bullet>().Dir = targetDir.normalized;
             this.m_currentItem = null;
             AudioSource.PlayClipAtPoint(this.m_playerData.ShootingSound, this.m_camera.position, 0.25f);
         }
-
-        private void HandleMovement(float delta)
-        {
-            this.m_moveDirection = this.m_camera.forward * this.m_inputProcessor.MovementZ;
-            this.m_moveDirection += this.m_camera.right * this.m_inputProcessor.MovementX;
-
-            var movementSpeed = this.m_isRunning ? this.m_playerData.RunSpeed : this.m_playerData.WalkSpeed;
-            this.m_moveDirection = this.m_moveDirection.normalized * movementSpeed;
-            var projectedVelocity = Vector3.ProjectOnPlane(this.m_moveDirection, Vector3.up);
-            projectedVelocity.y = this.m_rigidbody.velocity.y;
-            this.m_rigidbody.velocity = projectedVelocity;
-
-            var isMoving = Math.Abs(this.m_moveDirection.x) > 0f || Math.Abs(this.m_moveDirection.z) > 0f;
-            
-            this.m_animator.SetBool("IsIdle", this.m_moveDirection == Vector3.zero);
-            this.m_animator.SetBool("IsWalking", isMoving && !this.m_isRunning);
-            this.m_animator.SetBool("IsRunning", isMoving && this.m_isRunning);
-        }
-
-        private void HandleRotation(float delta)
-        {
-            this.Rotate(delta);
-        }
-
-        private void Rotate(float delta)
-        {
-            var targetDir = Vector3.zero;
-
-            targetDir = this.m_camera.forward * this.m_inputProcessor.MovementZ;
-            targetDir += this.m_camera.right * this.m_inputProcessor.MovementX;
-            targetDir.y = 0f;
-
-            if (targetDir == Vector3.zero)
-                targetDir = this.transform.forward;
-
-            this.RotateTowards(targetDir, this.m_playerData.RotationSpeed, delta);
-        }
-
-        private void RotateTowards(Vector3 dir, float rotationSpeed, float delta)
-        {
-            var lookRotation = Quaternion.LookRotation(dir.normalized);
-            this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, rotationSpeed * delta);
-        }
-
-        private bool IsGrounded()
-        {
-            var boxSize = new Vector3(1f, 0.2f, 1f);
-            return Physics.OverlapBox(this.m_feet.transform.position, boxSize, Quaternion.identity, 1 << LayerMask.NameToLayer("Ground")).Length > 0;
-        }
+        
 
         private void OnDrawGizmos()
         {
             var boxSize = new Vector3(1f, 0.2f, 1f);
             Gizmos.DrawWireCube(this.m_feet.transform.position, boxSize);
         }
-
-        private IEnumerator HandleJump()
-        {
-            AudioSource.PlayClipAtPoint(this.m_playerData.JumpSound, this.m_camera.position, 0.25f);
-            this.m_animator.SetTrigger("StartJump");
-            this.m_rigidbody.AddForce(Vector3.up * this.m_playerData.JumpForce, ForceMode.Impulse);
-            while (!this.IsGrounded())
-            {
-
-                yield return new WaitForFixedUpdate();
-            }
-
-            this.m_animator.SetBool("IsGrounded", true);
-        }
-
         private void OnCollisionEnter(Collision other)
         {
             var hazard = other.gameObject.GetComponent<Hazard>();
@@ -207,13 +145,15 @@ namespace Player
             if (isKillingHazard)
             {
                 this.PlayerDie(hazard.gameObject);
+
             }
         }
         private void OnTriggerEnter(Collider other)
         {
             if (other.GetComponent<Goal>() != null)
             {
-                StartCoroutine(this.HandleReachedGoal());
+                this.m_rigidbody.velocity = Vector3.zero;
+                this.ChangeState(new CheerState(this));
                 return;
             }
 
@@ -226,7 +166,7 @@ namespace Player
                 return;
             }
         }
-
+        
         private void OnParticleCollision(GameObject other)
         {
             Debug.Log("Particle collision");
@@ -240,64 +180,12 @@ namespace Player
 
         private void PlayerDie(GameObject killer)
         {
-            if (this.m_isDead)
+            if(this.m_currentPlayerState.GetType() == typeof(DieState))
                 return;
             
-            this.m_inputProcessor.enabled = false;
-            this.m_isRunning = false;
-            this.m_animator.SetBool("IsWalking", false);
-            this.m_animator.SetBool("IsIdle", false);
-            this.m_animator.SetBool("IsRunning", false);
-            this.StartCoroutine(this.HandleDie(killer));
-        }
-
-        private IEnumerator HandleDie(GameObject killer)
-        {
-            this.m_isDead = true;
-            this.m_currentItem = null;
             this.m_died?.Invoke(this, new PlayerDiedEventArgs(killer));
-            this.m_moveDirection = Vector3.zero;
-            this.m_animator.Play("Die");
-            yield return new WaitForSeconds(4.34f);
-            StartCoroutine(this.HandleRespawn());
+            this.m_currentItem = null;
+            this.ChangeState(new DieState(this));
         }
-
-        private IEnumerator HandleRespawn()
-        {
-            this.RespawnPlayer();
-            this.m_respawned?.Invoke(this, System.EventArgs.Empty);
-            this.m_animator.SetTrigger("Respawn");
-            yield return new WaitForSeconds(8.5f);
-            this.m_animator.Play("Idle");
-            this.m_inputProcessor.enabled = true;
-            this.m_isDead = false;
-        }
-
-        private void RespawnPlayer()
-        {
-            this.transform.position = FindObjectOfType<SpawnPoint>().transform.position;
-        }
-
-        private IEnumerator HandleReachedGoal()
-        {
-            AudioSource.PlayClipAtPoint(this.m_playerData.VictorySound, this.m_camera.position, 0.25f);
-            this.m_inputProcessor.enabled = false;
-            this.m_rigidbody.velocity = Vector3.zero;
-            this.m_reachedGoal?.Invoke(this, System.EventArgs.Empty);
-            this.m_animator.Play("Cheer");
-            this.RotateTowards(Vector3.forward, 100, 1);
-            yield return new WaitForSeconds(8.217f);
-
-            if (this.m_currentSceneIndex < SceneManager.sceneCountInBuildSettings - 1)
-            {
-                SceneManager.LoadScene(this.m_currentSceneIndex + 1);
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
-            }
-        }
-        
-        
     }
 }

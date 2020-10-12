@@ -11,12 +11,15 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public SpawnPoint CurrentSpawnPoint => this.m_currentSpawnPoint;
+    
     private Segment[] m_segments;
 
     private Hazard[] m_hazardsWithoutSegment;
 
     private static GameManager s_instance;
     private ItemHolder[] m_itemHolders;
+    private SpawnPoint m_currentSpawnPoint;
     public static GameManager Instance => s_instance ?? FindObjectOfType<GameManager>();
 
     private void Awake()
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        SceneManager.sceneLoaded +=OnsceneLoaded;
+        SceneManager.sceneLoaded += this.OnsceneLoaded;
     }
 
     private void OnsceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -39,36 +42,24 @@ public class GameManager : MonoBehaviour
         this.m_segments = FindObjectsOfType<Segment>();
         this.m_hazardsWithoutSegment = FindObjectsOfType<Hazard>().Where(h => h.GetComponentInParent<Segment>() == null).ToArray();
         this.m_itemHolders = FindObjectsOfType<ItemHolder>();
+        this.m_currentSpawnPoint = FindObjectOfType<SpawnPoint>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        PlayerController.Instance.Died += OnPlayerDeath;
         PlayerController.Instance.Respawned += this.OnPlayerRespawned;
-        PlayerController.Instance.ReachedGoal += OnPlayerReachedGoal;
-
-
     }
 
-    private void OnPlayerReachedGoal(object sender, System.EventArgs e)
+    private void OnDestroy()
     {
-        this.ResetLevel();
+        SceneManager.sceneLoaded -= this.OnsceneLoaded;
+        // PlayerController.Instance.Respawned -= this.OnPlayerRespawned;
     }
-
+    
     private void OnPlayerRespawned(object sender, System.EventArgs e)
     {
         this.ResetLevel();
-    }
-
-    private void OnPlayerDeath(object sender, System.EventArgs e)
-    {
-
-    }
-
-    private void ResetItemHolders()
-    {
-        
     }
 
     private void ResetLevel()
@@ -80,8 +71,18 @@ public class GameManager : MonoBehaviour
             segment.ResetSegment();
 
         foreach (var itemHolder in this.m_itemHolders)
-        {
             itemHolder.ResetHolder();
-        }
+        
     }
+    
+    public void LoadNextLevel()
+    {
+        var currentIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if (currentIndex + 1 < SceneManager.sceneCountInBuildSettings)
+            SceneManager.LoadScene(++currentIndex);
+        else
+            SceneManager.LoadScene(0);
+    }
+    
 }

@@ -14,6 +14,7 @@ namespace Hazards
         private Animator m_animator;
     
         private bool m_isDead;
+        private bool m_isAbleToChase = true;
         private Collider m_collider;
     
         private Transform m_target;
@@ -46,21 +47,22 @@ namespace Hazards
 
         private void PlayerDied(object sender, PlayerDiedEventArgs args)
         {
-                if (args.Killer == this.gameObject)
-                {
-                    this.TryPlayAudioClip(this.m_enemyData.ZombieVictory,false);
-                    this.m_animator.Play("Cheering");
-                }
-                
-                this.m_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-                this.m_target = null;
-                this.m_navMeshAgent.isStopped = true;
-                
+            if (args.Killer == this.gameObject)
+            {
+                this.TryPlayAudioClip(this.m_enemyData.ZombieVictory,false);
+                this.m_animator.Play("Cheering");
+            }
+            this.m_target = null;
+            this.m_navMeshAgent.SetDestination(this.transform.position);
+            this.m_navMeshAgent.isStopped = true;
+            this.m_rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            this.m_rigidbody.velocity = Vector3.zero;
+            this.m_isAbleToChase = false;
         }
 
         public void Update()
         {
-            if (PlayerController.Instance.IsDead || this.m_isDead)
+            if (this.m_isDead || !this.m_isAbleToChase)
             {
                 return;
             }
@@ -103,10 +105,11 @@ namespace Hazards
             this.m_isDead = false;
             this.transform.position = this.m_startingPos;
             this.transform.rotation = this.m_startingRot;
+            this.m_rigidbody.constraints = RigidbodyConstraints.None;
             this.m_animator.SetFloat("Velocity", 0f);
             this.m_animator.Play("Idle");
             this.m_collider.enabled = true;
-            this.m_rigidbody.constraints = RigidbodyConstraints.None;
+            this.m_isAbleToChase = true;
         }
 
         private void OnTriggerEnter(Collider other)

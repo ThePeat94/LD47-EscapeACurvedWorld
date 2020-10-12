@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5f9018558844caa38ac188f0d69a2b, type: 3}
   m_Name: Player Data
   m_EditorClassIdentifier: 
-  m_jumpForce: 5
+  m_jumpForce: 7
   m_walkSpeed: 3
   m_runSpeed: 7
   m_lives: 3
@@ -21,3 +21,12 @@ MonoBehaviour:
   m_powerUpSound: {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}
   m_victorySound: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
   m_shootingSound: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+  m_idleClipName: Idle
+  m_walkClipName: Walk
+  m_runClipName: Run
+  m_startJumpClipName: StartJump
+  m_midAirClipName: MidAir
+  m_endJumpClipName: EndJump
+  m_dieClipName: Die
+  m_RespawnClipName: Respawn
+  m_cheerClipName: Cheer
