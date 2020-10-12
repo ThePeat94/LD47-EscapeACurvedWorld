@@ -41,6 +41,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SkipDance"",
+                    ""type"": ""Button"",
+                    ""id"": ""a369339f-91ff-4fc2-8d82-ff05b6a174b8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -120,6 +128,17 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0390a8ac-2eaa-49c7-88d8-095998ae6ded"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipDance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -183,6 +202,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Keyboard_Movement = m_Keyboard.FindAction("Movement", throwIfNotFound: true);
         m_Keyboard_Jump = m_Keyboard.FindAction("Jump", throwIfNotFound: true);
         m_Keyboard_Sprint = m_Keyboard.FindAction("Sprint", throwIfNotFound: true);
+        m_Keyboard_SkipDance = m_Keyboard.FindAction("SkipDance", throwIfNotFound: true);
         // Mouse
         m_Mouse = asset.FindActionMap("Mouse", throwIfNotFound: true);
         m_Mouse_MouseMovement = m_Mouse.FindAction("MouseMovement", throwIfNotFound: true);
@@ -239,6 +259,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Keyboard_Movement;
     private readonly InputAction m_Keyboard_Jump;
     private readonly InputAction m_Keyboard_Sprint;
+    private readonly InputAction m_Keyboard_SkipDance;
     public struct KeyboardActions
     {
         private @PlayerInput m_Wrapper;
@@ -246,6 +267,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Keyboard_Movement;
         public InputAction @Jump => m_Wrapper.m_Keyboard_Jump;
         public InputAction @Sprint => m_Wrapper.m_Keyboard_Sprint;
+        public InputAction @SkipDance => m_Wrapper.m_Keyboard_SkipDance;
         public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -264,6 +286,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Sprint.started -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSprint;
+                @SkipDance.started -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSkipDance;
+                @SkipDance.performed -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSkipDance;
+                @SkipDance.canceled -= m_Wrapper.m_KeyboardActionsCallbackInterface.OnSkipDance;
             }
             m_Wrapper.m_KeyboardActionsCallbackInterface = instance;
             if (instance != null)
@@ -277,6 +302,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @SkipDance.started += instance.OnSkipDance;
+                @SkipDance.performed += instance.OnSkipDance;
+                @SkipDance.canceled += instance.OnSkipDance;
             }
         }
     }
@@ -336,6 +364,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnSkipDance(InputAction.CallbackContext context);
     }
     public interface IMouseActions
     {

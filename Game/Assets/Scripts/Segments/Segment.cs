@@ -13,12 +13,12 @@ namespace Segments
         
         public Transform SegmentEnd => this.m_end;
         public Transform SegmentStart => this.m_start;
-
+        
         private void Start()
         {
             this.m_hazards = this.GetComponentsInChildren<Hazard>();
-            DisableRenderForPuzzleSlot(this.m_end);
-            DisableRenderForPuzzleSlot(this.m_start);
+            this.DisableRenderForPuzzleSlot(this.m_end);
+            this.DisableRenderForPuzzleSlot(this.m_start);
         }
 
         private void DisableRenderForPuzzleSlot(Transform slot)
@@ -38,6 +38,9 @@ namespace Segments
 
         public void ResetSegment()
         {
+            if (this.m_hazards == null || this.m_hazards.Length == 0)
+                return;
+            
            foreach(var hazard in this.m_hazards)
                hazard.ResetHazard();
         }
