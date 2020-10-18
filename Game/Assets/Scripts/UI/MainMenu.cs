@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] private GameObject m_StartMenu;
     [SerializeField] private GameObject m_SelectPlayMode;
+    [SerializeField] private GameObject m_ChooseLevel;
 
     public void BtnPlay_Click()
     {
@@ -31,7 +32,8 @@ public class MainMenu : MonoBehaviour
 
     public void BtnStoryMode_Click()
     {
-        SceneManager.LoadScene(1);
+        this.m_SelectPlayMode.SetActive(false);
+        this.m_ChooseLevel.SetActive(true);
     }
 
     public void BtnRandomMode_Click()
@@ -41,7 +43,19 @@ public class MainMenu : MonoBehaviour
 
     public void BtnBackToStartScreen_Click()
     {
-        this.m_SelectPlayMode.SetActive(false); 
-        this.m_StartMenu.SetActive(true);        
+        this.m_SelectPlayMode.SetActive(false);
+        this.m_StartMenu.SetActive(true);
+    }
+
+    public void BtnLvl_Click(int level)
+    {
+        SceneManager.LoadScene(level);
+    }
+
+    public void BtnBackToSelectPlayMode_Click()
+    {
+        this.m_ChooseLevel.SetActive(false);
+        this.m_SelectPlayMode.SetActive(true);
+        
     }
 }
